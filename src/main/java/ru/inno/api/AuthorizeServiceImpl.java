@@ -1,8 +1,9 @@
 package ru.inno.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ru.inno.model.UserInfo;
 import okhttp3.*;
+import ru.inno.model.UserInfo;
+
 import java.io.IOException;
 
 public class AuthorizeServiceImpl implements AuthorizeService {
