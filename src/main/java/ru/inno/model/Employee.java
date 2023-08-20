@@ -1,5 +1,6 @@
 package ru.inno.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,9 +21,6 @@ public class Employee {
     @JsonProperty
     private boolean isActive;
 
-    public Employee() {
-    }
-
     public Employee(int id, String firstName, String lastName, String middleName, int companyId, String email, String url, String phone, String birthdate, boolean isActive) {
         this.id = id;
         this.firstName = firstName;
@@ -33,6 +31,17 @@ public class Employee {
         this.url = url;
         this.phone = phone;
         this.birthdate = birthdate;
+        this.isActive = isActive;
+    }
+
+    public Employee(String firstName, String lastName, String middleName, int companyId, String email, String url, String phone, boolean isActive) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.companyId = companyId;
+        this.email = email;
+        this.url = url;
+        this.phone = phone;
         this.isActive = isActive;
     }
 
