@@ -10,10 +10,9 @@ import static io.restassured.RestAssured.given;
 
 public class EmployeeServiceImpl implements EmployeeService {
     private static final String PATH = "/employee";
-    private String uri;
     private final static String prefix = "AL-";
     Faker faker = new Faker();
-
+    private String uri;
 
     @Override
     public void setURI(String uri) {

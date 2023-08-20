@@ -15,19 +15,19 @@ public class CompanyEntity {
     @Id
     @Column(name = "id", nullable = false)
     private Integer id;
-        @JsonProperty("isActive")
-        @Column(name = "is_active", nullable = false)
-        private boolean isActive;
-        @Column(name = "create_timestamp", nullable = false)
-        private Timestamp createDateTime;
-        @Column(name = "change_timestamp", nullable = false)
-        private Timestamp changedTimestamp;
-        @Column(name = "name", nullable = false, length = 100)
-        private String name;
-        @Column(name = "description", nullable = true, length = 300)
-        private String description;
-        @Column(name = "deleted_at", nullable = true)
-        private Timestamp deletedAt;
+    @JsonProperty("isActive")
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
+    @Column(name = "create_timestamp", nullable = false)
+    private Timestamp createDateTime;
+    @Column(name = "change_timestamp", nullable = false)
+    private Timestamp changedTimestamp;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
+    @Column(name = "description", nullable = true, length = 300)
+    private String description;
+    @Column(name = "deleted_at", nullable = true)
+    private Timestamp deletedAt;
 
     public CompanyEntity() {
     }
@@ -98,5 +98,8 @@ public class CompanyEntity {
 
     public void setDeletedAt(Timestamp deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public void setLastChangedDateTime(Timestamp valueOf) {
     }
 }

@@ -1,18 +1,25 @@
 package ru.inno.db;
 
 import jakarta.persistence.EntityManager;
+import ru.inno.model.Employee;
 import ru.inno.model.EmployeeEntity;
 
+import java.sql.Connection;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class EmployeeRepositoryJPA implements EmployeeRepository {
 
-    private final EntityManager entityManager;
+    private EntityManager entityManager;
+    private Connection connection;
 
     public EmployeeRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    public EmployeeRepositoryJPA(Connection connection) {
+        this.connection = connection;
     }
 
     @Override
@@ -28,9 +35,10 @@ public class EmployeeRepositoryJPA implements EmployeeRepository {
     }
 
     @Override
-    public int create(EmployeeEntity employee) {
-        employee.setCreateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
-        employee.setChangeTimestamp(Timestamp.valueOf(LocalDateTime.now()));
+    public int create(Employee employee) {
+        EmployeeEntity dbEmployee = entityManager.find(EmployeeEntity.class, employee.getId());
+        dbEmployee.setCreateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
+        dbEmployee.setChangeTimestamp(Timestamp.valueOf(LocalDateTime.now()));
         entityManager.getTransaction().begin();
         entityManager.persist(employee);
         entityManager.getTransaction().commit();

@@ -1,5 +1,6 @@
 package ru.inno.db;
 
+import ru.inno.model.Employee;
 import ru.inno.model.EmployeeEntity;
 
 import java.util.List;
@@ -10,7 +11,8 @@ public interface EmployeeRepository {
 
     EmployeeEntity getById(int id);
 
-    int create(EmployeeEntity emp);
+    int create(Employee employee);
+
     int update(EmployeeEntity e);
 
     void deleteById(int id);

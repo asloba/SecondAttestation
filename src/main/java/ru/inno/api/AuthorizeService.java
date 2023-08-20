@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface AuthorizeService {
 
-    String auth(String username, String password) throws IOException;
+    String getToken() throws IOException;
 }

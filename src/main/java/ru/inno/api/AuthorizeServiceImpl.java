@@ -10,12 +10,13 @@ import static io.restassured.RestAssured.given;
 public class AuthorizeServiceImpl implements AuthorizeService {
 
     private static final String PATH = "auth/login";
+
     @Override
-    public String auth(String username, String password) throws IOException {
+    public String getToken() throws IOException {
         String token = given()
                 .basePath(PATH)
                 .contentType(ContentType.JSON)
-                .body(new UserForAuthInfo("roxy", "animal-fairy"))
+                .body(new UserForAuthInfo("flora", "nature-fairy"))
                 .post()
                 .then()
                 .statusCode(201)

@@ -1,11 +1,14 @@
 package ru.inno.model;
 
-import java.util.Objects;
-
 public class UserForAuthInfo {
 
     private String login;
     private String password;
+
+    public UserForAuthInfo(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
 
     public String getLogin() {
         return login;
@@ -20,11 +23,6 @@ public class UserForAuthInfo {
     }
 
     public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public UserForAuthInfo(String login, String password) {
-        this.login = login;
         this.password = password;
     }
 }
