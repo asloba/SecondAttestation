@@ -1,23 +1,23 @@
 package ext;
 
 import org.junit.jupiter.api.extension.*;
-import ru.inno.db.EmployeeRepository;
-import ru.inno.db.EmployeeRepositoryJPA;
+import ru.inno.db.CompanyRepository;
+import ru.inno.db.CompanyRepositoryJPA;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class EmployeeRepositoryResolver implements ParameterResolver, BeforeAllCallback, AfterAllCallback {
-    private Connection connection;
+public class CompanyRepositoryResolver implements ParameterResolver, BeforeAllCallback, AfterAllCallback {
+    private Connection connection = null;
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterContext.getParameter().getType().equals(EmployeeRepository.class);
+        return parameterContext.getParameter().getType().equals(CompanyRepository.class);
     }
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-        return new EmployeeRepositoryJPA(connection);
+        return new CompanyRepositoryJPA(connection);
     }
 
     @Override
@@ -36,5 +36,4 @@ public class EmployeeRepositoryResolver implements ParameterResolver, BeforeAllC
         String pass = "0R1RNWXMepS7mrvcKRThRi82GtJ2Ob58";
         connection = DriverManager.getConnection(connectionString, user, pass);
     }
-
 }

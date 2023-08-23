@@ -1,7 +1,6 @@
 package ru.inno.api;
 
-import io.restassured.http.ContentType;
-import ru.inno.model.UserForAuthInfo;
+import io.restassured.filter.log.LogDetail;
 
 import java.io.IOException;
 
@@ -9,16 +8,19 @@ import static io.restassured.RestAssured.given;
 
 public class AuthorizeServiceImpl implements AuthorizeService {
 
-    private static final String PATH = "auth/login";
+    private static final String URI = "https://x-clients-be.onrender.com/auth/login";
 
     @Override
     public String getToken() throws IOException {
         String token = given()
-                .basePath(PATH)
-                .contentType(ContentType.JSON)
-                .body(new UserForAuthInfo("flora", "nature-fairy"))
+                .baseUri(URI)
+                .log().ifValidationFails(LogDetail.ALL)
+                .contentType("application/json; charset=utf-8")
+                .body("{\"username\": \"flora\", \"password\": \"nature-fairy\"}")
+                .when()
                 .post()
                 .then()
+                .log().ifValidationFails()
                 .statusCode(201)
                 .extract().path("userToken");
         return token;

@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "new_entity")
+@Table(name = "company", schema = "public", catalog = "x_clients_db_r06g")
 public class CompanyEntity {
     @Id
     @Column(name = "id", nullable = false)
@@ -98,8 +98,5 @@ public class CompanyEntity {
 
     public void setDeletedAt(Timestamp deletedAt) {
         this.deletedAt = deletedAt;
-    }
-
-    public void setLastChangedDateTime(Timestamp valueOf) {
     }
 }

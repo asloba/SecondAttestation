@@ -12,7 +12,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private static final String PATH = "/employee";
     private final static String prefix = "AL-";
     Faker faker = new Faker();
-    private String uri;
+    private String uri = "https://x-clients-be.onrender.com";
 
     @Override
     public void setURI(String uri) {
@@ -23,11 +23,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee createRandomEmployee(int companyId) {
         String firstName = prefix + faker.name().firstName();
         String lastName = faker.name().lastName();
-        String middleName = prefix + faker.funnyName();
         String email = faker.internet().emailAddress();
         String url = faker.internet().url();
-        String phone = faker.phoneNumber().phoneNumber();
-        return new Employee(firstName, lastName, middleName, companyId, email, url, phone, true);
+        String phone = String.valueOf(faker.number().digits(10));
+        String birthDate = faker.date().birthday().toString();
+        return new Employee(firstName, lastName, companyId, email, url, phone, birthDate, true);
     }
 
     @Override
@@ -62,7 +62,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public int create(Employee employee, String token) {
         return given()
                 .baseUri(uri + PATH)
+                .log().ifValidationFails()
                 .header("accept", "application/json")
+                .contentType("application/json; charset=utf-8")
                 .header("x-client-token", token)
                 .body(employee)
                 .when()

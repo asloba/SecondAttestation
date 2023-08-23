@@ -9,9 +9,13 @@ public interface CompanyRepository {
 
     List<CompanyEntity> getAll() throws SQLException;
 
+    List<CompanyEntity> getAll(boolean isActive);
+
     CompanyEntity getLast() throws SQLException;
 
-    CompanyEntity getById(int id);
+    CompanyEntity getById(int id) throws SQLException;
+
+    int create(String name) throws SQLException;
 
     int create(String name, String description) throws SQLException;
 

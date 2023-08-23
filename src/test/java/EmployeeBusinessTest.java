@@ -1,5 +1,7 @@
 import com.github.javafaker.Faker;
-import ext.EmployeeRepositoryResolver;
+import ext.CompanyRepositoryJPAResolver;
+import ext.EmployeeRepositoryJPAResolver;
+import ext.PropertiesResolver;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,28 +20,29 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith({EmployeeRepositoryResolver.class})
+@ExtendWith({PropertiesResolver.class, EmployeeRepositoryJPAResolver.class, CompanyRepositoryJPAResolver.class})
 public class EmployeeBusinessTest {
 
     private static EmployeeService employeeService = new EmployeeServiceImpl();
-    private static Employee employee;
+
     private static int companyId;
+    private static int employeeId;
     Faker faker = new Faker();
     private String token = new AuthorizeServiceImpl().getToken();
+
 
     public EmployeeBusinessTest() throws IOException {
     }
 
 
     @BeforeAll
-    public static void setUp(EmployeeRepository repository, CompanyRepository companyRepository) throws SQLException {
+    public static void setUp(CompanyRepository companyRepository) {
         RestAssured.baseURI = "https://x-clients-be.onrender.com/";
-        companyId = companyRepository.create("AL-company", "AL-company");
-    }
-
-    @AfterEach
-    public static void cleanData(EmployeeRepository employeeRepository) {
-        employeeRepository.deleteById(employee.getId());
+        try {
+            companyId = companyRepository.create("AL-company", "AL-company");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @AfterAll
@@ -47,12 +50,16 @@ public class EmployeeBusinessTest {
         companyRepository.deleteById(companyId);
     }
 
+    @AfterEach
+    public void cleanData(EmployeeRepository employeeRepository) {
+        employeeRepository.deleteById(employeeId);
+    }
+
     @Test
     @DisplayName("Добавление нового сотрудника и проверка записи его в БД")
     public void shouldCreateEmployeeAndCheckSavingToDB(EmployeeRepository repository, CompanyRepository companyRepository) throws SQLException {
         Employee createEmployee = employeeService.createRandomEmployee(companyId);
-        int employeeId = employeeService.create(createEmployee, token);
-        createEmployee.setId(employeeId);
+        employeeId = employeeService.create(createEmployee, token);
         EmployeeEntity employeeInDb = repository.getById(employeeId);
         assertEquals(employeeId, employeeInDb.getId());
     }

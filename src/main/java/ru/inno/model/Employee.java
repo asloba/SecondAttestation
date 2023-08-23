@@ -1,7 +1,6 @@
 package ru.inno.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
@@ -17,7 +16,6 @@ public class Employee {
     private String url;
     private String phone;
     private String birthdate;
-    @JsonProperty
     private boolean isActive;
 
     public Employee(int id, String firstName, String lastName, String middleName, int companyId, String email, String url, String phone, String birthdate, boolean isActive) {
@@ -33,14 +31,14 @@ public class Employee {
         this.isActive = isActive;
     }
 
-    public Employee(String firstName, String lastName, String middleName, int companyId, String email, String url, String phone, boolean isActive) {
+    public Employee(String firstName, String lastName, int companyId, String email, String url, String phone, String birthdate, boolean isActive) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.middleName = middleName;
         this.companyId = companyId;
         this.email = email;
         this.url = url;
         this.phone = phone;
+        this.birthdate = birthdate;
         this.isActive = isActive;
     }
 
@@ -120,9 +118,9 @@ public class Employee {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
+//    public void setActive(boolean active) {
+//        isActive = active;
+//    }
 
     @Override
     public boolean equals(Object o) {
