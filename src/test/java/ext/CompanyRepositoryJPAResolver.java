@@ -19,4 +19,3 @@ public class CompanyRepositoryJPAResolver implements ParameterResolver {
         return new CompanyRepositoryJPA((EntityManager) ContextManager.getEntityManager(extensionContext));
     }
 }
-

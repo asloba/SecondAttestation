@@ -53,7 +53,9 @@ public class EmployeeRepositoryJPA implements EmployeeRepository {
     @Override
     public void deleteById(int id) {
         EmployeeEntity entity = entityManager.find(EmployeeEntity.class, id);
-        entityManager.getTransaction().begin();
+        if (!entityManager.getTransaction().isActive()){
+            entityManager.getTransaction().begin();
+        }
         entityManager.remove(entity);
         entityManager.getTransaction().commit();
     }

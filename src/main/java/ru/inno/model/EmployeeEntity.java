@@ -40,7 +40,6 @@ public class EmployeeEntity {
     @Column(name = "company_id", nullable = false)
     private int companyId;
 
-
     public EmployeeEntity() {
     }
 

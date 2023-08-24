@@ -13,8 +13,6 @@ import java.util.List;
 public class CompanyRepositoryJPA implements CompanyRepository {
     private EntityManager entityManager;
     private Connection connection;
-
-
     public CompanyRepositoryJPA(Connection connection) {
         this.connection = connection;
     }
@@ -69,7 +67,9 @@ public class CompanyRepositoryJPA implements CompanyRepository {
     @Override
     public void deleteById(int id) {
         CompanyEntity entity = entityManager.find(CompanyEntity.class, id);
-        entityManager.getTransaction().begin();
+        if (!entityManager.getTransaction().isActive()){
+            entityManager.getTransaction().begin();
+        }
         entityManager.remove(entity);
         entityManager.getTransaction().commit();
     }

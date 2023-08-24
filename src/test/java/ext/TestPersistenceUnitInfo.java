@@ -44,7 +44,6 @@ public class TestPersistenceUnitInfo implements PersistenceUnitInfo {
         return HibernatePersistenceProvider.class.getName();
     }
 
-
     @Override
     public PersistenceUnitTransactionType getTransactionType() {
         return null;
@@ -75,7 +74,6 @@ public class TestPersistenceUnitInfo implements PersistenceUnitInfo {
         return null;
     }
 
-
     @Override
     public boolean excludeUnlistedClasses() {
         return false;
@@ -103,7 +101,6 @@ public class TestPersistenceUnitInfo implements PersistenceUnitInfo {
 
     @Override
     public void addTransformer(ClassTransformer classTransformer) {
-
     }
 
     @Override
