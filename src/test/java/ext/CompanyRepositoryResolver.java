@@ -31,9 +31,9 @@ public class CompanyRepositoryResolver implements ParameterResolver, BeforeAllCa
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
         System.out.println("connecting");
-        String connectionString = "jdbc:postgresql://dpg-cj94hf0eba7s73bdki80-a.oregon-postgres.render.com/x_clients_db_r06g";
-        String user = "x_clients_db_r06g_user";
-        String pass = "0R1RNWXMepS7mrvcKRThRi82GtJ2Ob58";
+        String connectionString = "";
+        String user = "";
+        String pass = "";
         connection = DriverManager.getConnection(connectionString, user, pass);
     }
 }
