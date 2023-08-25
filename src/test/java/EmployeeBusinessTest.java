@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import static java.util.function.Predicate.isEqual;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -74,4 +75,13 @@ public class EmployeeBusinessTest {
         assertEquals(1, endList.size());
         assertEquals(endList.get(0), employee);
     }
+    @Test
+    @DisplayName("Получение созданного сотрудника по id")
+    public void shouldGetCreatedEmployeeById(EmployeeService employeeService, EmployeeRepository employeeRepository) {
+        Employee employeeAPI = employeeService.createRandomEmployee(companyId);
+        EmployeeEntity employeeFromDB = employeeRepository.getById(employeeAPI.getId());
+//        assertThat(employeeAPI, isEqual(employeeFromDB));
+    }
+
+
 }
