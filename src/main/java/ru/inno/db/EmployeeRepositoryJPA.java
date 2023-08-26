@@ -12,14 +12,9 @@ import java.util.List;
 public class EmployeeRepositoryJPA implements EmployeeRepository {
 
     private EntityManager entityManager;
-    private Connection connection;
 
     public EmployeeRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
-    }
-
-    public EmployeeRepositoryJPA(Connection connection) {
-        this.connection = connection;
     }
 
     @Override
@@ -52,11 +47,12 @@ public class EmployeeRepositoryJPA implements EmployeeRepository {
 
     @Override
     public void deleteById(int id) {
-        EmployeeEntity entity = entityManager.find(EmployeeEntity.class, id);
+        EmployeeEntity employeeEntity = entityManager.find(EmployeeEntity.class, id);
         if (!entityManager.getTransaction().isActive()){
             entityManager.getTransaction().begin();
         }
-        entityManager.remove(entity);
+        if (employeeEntity == null) return;
+        entityManager.remove(employeeEntity);
         entityManager.getTransaction().commit();
     }
 }

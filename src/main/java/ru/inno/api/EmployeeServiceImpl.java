@@ -4,7 +4,9 @@ import com.github.javafaker.Faker;
 import io.restassured.common.mapper.TypeRef;
 import ru.inno.model.Employee;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
@@ -12,22 +14,42 @@ public class EmployeeServiceImpl implements EmployeeService {
     private static final String PATH = "/employee";
     private final static String prefix = "AL-";
     Faker faker = new Faker();
+    private Map<String, String> headers = new HashMap<>();
+
     private String uri = "https://x-clients-be.onrender.com";
+
+    public EmployeeServiceImpl(String uri) {
+        this.uri = uri;
+    }
 
     @Override
     public void setURI(String uri) {
         this.uri = uri;
     }
 
+//    @Override
+//    public Employee getRandomEmployee(int companyId) {
+//        int id = 0;
+//        String firstName = prefix + faker.name().firstName();
+//        String lastName = faker.name().lastName();
+//        String email = faker.internet().emailAddress();
+//        String url = faker.internet().url();
+//        String phone = String.valueOf(faker.number().digits(10));
+//        String birthDate = faker.date().birthday().toString();
+//        return new Employee(id,firstName, lastName, companyId, email, url, phone, birthDate, true);
+//    }
+
     @Override
-    public Employee createRandomEmployee(int companyId) {
-        String firstName = prefix + faker.name().firstName();
-        String lastName = faker.name().lastName();
-        String email = faker.internet().emailAddress();
-        String url = faker.internet().url();
-        String phone = String.valueOf(faker.number().digits(10));
-        String birthDate = faker.date().birthday().toString();
-        return new Employee(firstName, lastName, companyId, email, url, phone, birthDate, true);
+    public Employee getRandomEmployee(int companyId) {
+        Employee employee = new Employee();
+        employee.setFirstName(prefix + faker.name().firstName());
+        employee.setLastName(faker.name().lastName());
+        employee.setCompanyId(companyId);
+        employee.setEmail(faker.internet().emailAddress());
+        employee.setUrl(faker.internet().url());
+        employee.setPhone(String.valueOf(faker.number().digits(10)));
+        employee.setBirthdate(faker.date().birthday().toString());
+        return employee;
     }
 
     @Override
@@ -35,12 +57,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         return given()
                 .baseUri(uri + PATH)
                 .header("accept", "application/json")
-                .when()
+                .header("accept", "application/json")
                 .param("company", companyId)
+                .when()
                 .get()
                 .then()
                 .log().ifValidationFails()
-                .statusCode(200)
+                .extract()
+                .response()
+                .then()
                 .extract().body().as(new TypeRef<List<Employee>>() {
                 });
     }
@@ -74,11 +99,19 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .statusCode(201)
                 .contentType("application/json; charset=utf-8")
                 .extract().path("id");
-
     }
 
     @Override
-    public int update(Employee employee, String token) {
-        return 0;
+    public Employee update(Employee employee, String token) {
+        return given()
+                .log().ifValidationFails()
+                .contentType("application/json; charset=utf-8")
+                .header("x-client-token", token)
+                .body(employee)
+                .when()
+                .patch(uri + PATH + "/{id}", employee.getId())
+                .then().log().ifValidationFails()
+                .extract()
+                .body().as(Employee.class);
     }
 }

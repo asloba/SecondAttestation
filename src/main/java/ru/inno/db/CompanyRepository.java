@@ -7,17 +7,17 @@ import java.util.List;
 
 public interface CompanyRepository {
 
-    List<CompanyEntity> getAll() throws SQLException;
+    List<CompanyEntity> getAll() ;
 
     List<CompanyEntity> getAll(boolean isActive);
 
-    CompanyEntity getLast() throws SQLException;
+    CompanyEntity getLast();
 
-    CompanyEntity getById(int id) throws SQLException;
+    CompanyEntity getById(int id);
 
-    int create(String name) throws SQLException;
+    int create(String name);
 
-    int create(String name, String description) throws SQLException;
+    int create(String name, String description);
 
     void deleteById(int id);
 }

@@ -27,7 +27,7 @@ public class PropertyProvider {
         properties = new Properties();
         try {
             String env = System.getProperty("env", "dbTest");
-            properties.load(new FileReader("src/main/resources/" + env + ".properties"));
+            properties.load(new FileReader("src/test/resources/" + env + ".properties"));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

@@ -31,7 +31,10 @@ public class Employee {
         this.isActive = isActive;
     }
 
-    public Employee(String firstName, String lastName, int companyId, String email, String url, String phone, String birthdate, boolean isActive) {
+    public Employee() {
+    }
+
+    public Employee(int id, String firstName, String lastName, int companyId, String email, String url, String phone, String birthdate, boolean isActive) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.companyId = companyId;

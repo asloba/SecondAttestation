@@ -8,7 +8,7 @@ public interface EmployeeService {
 
     void setURI(String uri);
 
-    Employee createRandomEmployee(int companyId);
+    Employee getRandomEmployee(int companyId);
 
     List<Employee> getAll(int companyId);
 
@@ -16,5 +16,5 @@ public interface EmployeeService {
 
     int create(Employee employee, String token);
 
-    int update(Employee employee, String token);
+    Employee update(Employee employee, String token);
 }

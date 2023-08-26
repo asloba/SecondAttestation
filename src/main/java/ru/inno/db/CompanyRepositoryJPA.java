@@ -12,17 +12,13 @@ import java.util.List;
 
 public class CompanyRepositoryJPA implements CompanyRepository {
     private EntityManager entityManager;
-    private Connection connection;
-    public CompanyRepositoryJPA(Connection connection) {
-        this.connection = connection;
-    }
 
     public CompanyRepositoryJPA(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
     @Override
-    public List<CompanyEntity> getAll() throws SQLException {
+    public List<CompanyEntity> getAll()  {
         TypedQuery<CompanyEntity> selectAll = entityManager.createQuery("SELECT c FROM CompanyEntity c WHERE c.deletedAt is not null", CompanyEntity.class);
         return selectAll.getResultList();
     }
@@ -33,10 +29,13 @@ public class CompanyRepositoryJPA implements CompanyRepository {
     }
 
     @Override
-    public CompanyEntity getLast() throws SQLException {
-        List<CompanyEntity> companiesList = getAll();
-        int size = companiesList.size();
-        return companiesList.get(size - 1);
+    public CompanyEntity getLast() {
+//        List<CompanyEntity> companiesList = getAll();
+//        int size = companiesList.size();
+//        return companiesList.get(size - 1);
+        TypedQuery<CompanyEntity> query = entityManager.createQuery(
+                "SELECT c FROM CompanyEntity c ORDER BY c.id DESC LIMIT 1", CompanyEntity.class);
+        return query.getSingleResult();
     }
 
     @Override
@@ -45,12 +44,12 @@ public class CompanyRepositoryJPA implements CompanyRepository {
     }
 
     @Override
-    public int create(String name) throws SQLException {
+    public int create(String name) {
         return 0;
     }
 
     @Override
-    public int create(String name, String description) throws SQLException {
+    public int create(String name, String description) {
         CompanyEntity company = new CompanyEntity();
         int id = getLast().getId() + 2;
         company.setId(id);
@@ -66,11 +65,12 @@ public class CompanyRepositoryJPA implements CompanyRepository {
 
     @Override
     public void deleteById(int id) {
-        CompanyEntity entity = entityManager.find(CompanyEntity.class, id);
+        CompanyEntity companyEntity = entityManager.find(CompanyEntity.class, id);
         if (!entityManager.getTransaction().isActive()){
             entityManager.getTransaction().begin();
         }
-        entityManager.remove(entity);
+        if (companyEntity == null) return;
+        entityManager.remove(companyEntity);
         entityManager.getTransaction().commit();
     }
 }

@@ -150,4 +150,35 @@ public class EmployeeEntity {
     public int hashCode() {
         return Objects.hash(id, isActive, createTimestamp, changeTimestamp, firstName, lastName, middleName, phone, email, avatarUrl, birthdate, companyId);
     }
+
+    @Override
+    public String toString() {
+        return "EmployeeEntity{" +
+                "id=" + id +
+                ", isActive=" + isActive +
+                ", createTimestamp=" + createTimestamp +
+                ", changeTimestamp=" + changeTimestamp +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", birthdate=" + birthdate +
+                ", companyId=" + companyId +
+                '}';
+    }
+
+    public boolean isEqualEmployeeModel(Employee employee) {
+        return id == employee.getId()
+                && isActive == employee.isActive()
+                && companyId == employee.getCompanyId()
+                && Objects.equals(firstName, employee.getFirstName())
+                && Objects.equals(lastName, employee.getLastName())
+                && Objects.equals(middleName, employee.getMiddleName())
+                && Objects.equals(phone, employee.getPhone())
+                && Objects.equals(email, employee.getEmail())
+                && Objects.equals(avatarUrl, employee.getUrl());
+    }
+
 }
