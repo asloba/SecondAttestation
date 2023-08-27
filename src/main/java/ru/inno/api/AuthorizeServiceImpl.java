@@ -2,8 +2,6 @@ package ru.inno.api;
 
 import io.restassured.filter.log.LogDetail;
 
-import java.io.IOException;
-
 import static io.restassured.RestAssured.given;
 
 public class AuthorizeServiceImpl implements AuthorizeService {

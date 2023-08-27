@@ -27,29 +27,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.uri = uri;
     }
 
-//    @Override
-//    public Employee getRandomEmployee(int companyId) {
-//        int id = 0;
-//        String firstName = prefix + faker.name().firstName();
-//        String lastName = faker.name().lastName();
-//        String email = faker.internet().emailAddress();
-//        String url = faker.internet().url();
-//        String phone = String.valueOf(faker.number().digits(10));
-//        String birthDate = faker.date().birthday().toString();
-//        return new Employee(id,firstName, lastName, companyId, email, url, phone, birthDate, true);
-//    }
-
     @Override
     public Employee getRandomEmployee(int companyId) {
-        Employee employee = new Employee();
-        employee.setFirstName(prefix + faker.name().firstName());
-        employee.setLastName(faker.name().lastName());
-        employee.setCompanyId(companyId);
-        employee.setEmail(faker.internet().emailAddress());
-        employee.setUrl(faker.internet().url());
-        employee.setPhone(String.valueOf(faker.number().digits(10)));
-        employee.setBirthdate(faker.date().birthday().toString());
-        return employee;
+        int id = 0;
+        String firstName = prefix + faker.name().firstName();
+        String lastName = faker.name().lastName();
+        String email = faker.internet().emailAddress();
+        String url = faker.internet().url();
+        String phone = String.valueOf(faker.number().digits(10));
+        String birthDate = faker.date().birthday().toString();
+        return new Employee(id, firstName, lastName, companyId, email, url, phone, birthDate, true);
     }
 
     @Override
@@ -73,7 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getById(int id) {
         return given()
-                .baseUri(uri + PATH + id)
+                .baseUri(uri + PATH + "/" + id)
                 .header("accept", "application/json")
                 .when()
                 .get()

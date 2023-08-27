@@ -4,8 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import ru.inno.model.CompanyEntity;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +16,7 @@ public class CompanyRepositoryJPA implements CompanyRepository {
     }
 
     @Override
-    public List<CompanyEntity> getAll()  {
+    public List<CompanyEntity> getAll() {
         TypedQuery<CompanyEntity> selectAll = entityManager.createQuery("SELECT c FROM CompanyEntity c WHERE c.deletedAt is not null", CompanyEntity.class);
         return selectAll.getResultList();
     }
@@ -30,9 +28,6 @@ public class CompanyRepositoryJPA implements CompanyRepository {
 
     @Override
     public CompanyEntity getLast() {
-//        List<CompanyEntity> companiesList = getAll();
-//        int size = companiesList.size();
-//        return companiesList.get(size - 1);
         TypedQuery<CompanyEntity> query = entityManager.createQuery(
                 "SELECT c FROM CompanyEntity c ORDER BY c.id DESC LIMIT 1", CompanyEntity.class);
         return query.getSingleResult();
@@ -57,7 +52,9 @@ public class CompanyRepositoryJPA implements CompanyRepository {
         company.setDescription(description);
         company.setCreateDateTime(Timestamp.valueOf(LocalDateTime.now()));
         company.setChangedTimestamp(Timestamp.valueOf(LocalDateTime.now()));
-        entityManager.getTransaction().begin();
+        if (!entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().begin();
+        }
         entityManager.persist(company);
         entityManager.getTransaction().commit();
         return company.getId();
@@ -66,7 +63,7 @@ public class CompanyRepositoryJPA implements CompanyRepository {
     @Override
     public void deleteById(int id) {
         CompanyEntity companyEntity = entityManager.find(CompanyEntity.class, id);
-        if (!entityManager.getTransaction().isActive()){
+        if (!entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().begin();
         }
         if (companyEntity == null) return;

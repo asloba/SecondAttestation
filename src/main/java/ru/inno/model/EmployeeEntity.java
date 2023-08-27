@@ -168,17 +168,4 @@ public class EmployeeEntity {
                 ", companyId=" + companyId +
                 '}';
     }
-
-    public boolean isEqualEmployeeModel(Employee employee) {
-        return id == employee.getId()
-                && isActive == employee.isActive()
-                && companyId == employee.getCompanyId()
-                && Objects.equals(firstName, employee.getFirstName())
-                && Objects.equals(lastName, employee.getLastName())
-                && Objects.equals(middleName, employee.getMiddleName())
-                && Objects.equals(phone, employee.getPhone())
-                && Objects.equals(email, employee.getEmail())
-                && Objects.equals(avatarUrl, employee.getUrl());
-    }
-
 }

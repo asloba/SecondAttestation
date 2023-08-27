@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import ru.inno.model.Employee;
 import ru.inno.model.EmployeeEntity;
 
-import java.sql.Connection;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,7 +33,9 @@ public class EmployeeRepositoryJPA implements EmployeeRepository {
         EmployeeEntity dbEmployee = entityManager.find(EmployeeEntity.class, employee.getId());
         dbEmployee.setCreateTimestamp(Timestamp.valueOf(LocalDateTime.now()));
         dbEmployee.setChangeTimestamp(Timestamp.valueOf(LocalDateTime.now()));
-        entityManager.getTransaction().begin();
+        if (!entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().begin();
+        }
         entityManager.persist(employee);
         entityManager.getTransaction().commit();
         return employee.getId();
@@ -48,7 +49,7 @@ public class EmployeeRepositoryJPA implements EmployeeRepository {
     @Override
     public void deleteById(int id) {
         EmployeeEntity employeeEntity = entityManager.find(EmployeeEntity.class, id);
-        if (!entityManager.getTransaction().isActive()){
+        if (!entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().begin();
         }
         if (employeeEntity == null) return;

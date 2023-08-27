@@ -34,5 +34,4 @@ public class EmployeeRepositoryJPAResolver implements ParameterResolver {
         }
         return new EmployeeRepositoryJPA((EntityManager) em);
     }
-
 }

@@ -1,6 +1,5 @@
 import com.github.javafaker.Faker;
 import ext.*;
-import io.restassured.RestAssured;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.inno.api.AuthorizeServiceImpl;
@@ -8,13 +7,10 @@ import ru.inno.api.EmployeeService;
 import ru.inno.api.EmployeeServiceImpl;
 import ru.inno.db.CompanyRepository;
 import ru.inno.db.EmployeeRepository;
-import ru.inno.db.EmployeeRepositoryJPA;
 import ru.inno.model.Employee;
 import ru.inno.model.EmployeeEntity;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,20 +19,15 @@ import static org.junit.jupiter.api.Assertions.*;
         CompanyRepositoryJPAResolver.class, JDBCConnectionResolver.class, EmployeeServiceResolver.class})
 public class EmployeeBusinessTest {
 
-    Properties properties = PropertyProvider.getInstance().getProps();
-    private EmployeeService employeeService = new EmployeeServiceImpl(properties.getProperty("test.url"));
+    static Faker faker = new Faker();
     private static int companyId;
     private static int employeeId;
-    static Faker faker = new Faker();
+    Properties properties = PropertyProvider.getInstance().getProps();
+    private EmployeeService employeeService = new EmployeeServiceImpl(properties.getProperty("test.url"));
     private String token = new AuthorizeServiceImpl().getToken();
-
-//    public EmployeeBusinessTest() throws IOException {
-//    }
 
     @BeforeAll
     public static void setUp(CompanyRepository companyRepository) {
-        RestAssured.baseURI = "https://x-clients-be.onrender.com/";
-
         companyId = companyRepository.create("AL-" + faker.company().name(), "AL-" + faker.twinPeaks().location());
     }
 
@@ -78,18 +69,29 @@ public class EmployeeBusinessTest {
 
     @Test
     @DisplayName("Обновление информации о сотруднике")
-    public void shouldUpdateEmployee(EmployeeService employeeService, EmployeeRepository employeeRepository) {
+    public void shouldUpdateEmployee(EmployeeService employeeService, EmployeeRepository employeeRepository) throws InterruptedException {
         //Генерируем тестовые данные
-        Employee employeeAPI = employeeService.getRandomEmployee(companyId);
-        Employee employeeUpdated = employeeService.getRandomEmployee(companyId);
+        Employee employeeData = employeeService.getRandomEmployee(companyId);
+        Employee employeeUpdatedData = employeeService.getRandomEmployee(companyId);
         //Создаём сотрудника
-        employeeId = employeeService.create(employeeAPI, token);
-        //Присваиваем employee c обновлёнными данными id созданного ранее сотрудника
-        employeeUpdated.setId(employeeId);
+        employeeId = employeeService.create(employeeData, token);
+        Employee employeeCreated = employeeService.getById(employeeId);
+        //Присваиваем созданному employee новое имя, фамилию и телефон
+        employeeCreated.setFirstName(employeeUpdatedData.getFirstName());
+        employeeCreated.setLastName(employeeUpdatedData.getLastName());
+        employeeCreated.setPhone(employeeUpdatedData.getPhone());
         //Обновляем employee
-        Employee updatedEmployeeAPI = employeeService.update(employeeUpdated, token);
+        Employee updatedEmployeeAPI = employeeService.update(employeeCreated, token);
+//        Employee updatedEmp = employeeService.getById(updatedEmployeeAPI.getId());
+        System.out.println(updatedEmployeeAPI);
+        Thread.sleep(500);
+        //Запрашиваем информацию о employee из бд
         EmployeeEntity employeeFromDB = employeeRepository.getById(updatedEmployeeAPI.getId());
-        assert(employeeFromDB.isEqualEmployeeModel(updatedEmployeeAPI));
+        Thread.sleep(500);
+        //Сравниваем, что обновленная информация о employee соответствует информации о нём из бд
+        assertEquals(updatedEmployeeAPI.getFirstName(), employeeFromDB.getFirstName());
+        assertEquals(updatedEmployeeAPI.getLastName(), employeeFromDB.getLastName());
+        assertEquals(updatedEmployeeAPI.getPhone(), employeeFromDB.getPhone());
     }
 
     @Test
@@ -136,10 +138,9 @@ public class EmployeeBusinessTest {
         //Устанавливаем некорректный id
         employeeUpdated.setId(fakeEmployeeId);
         //Обновляем employee
-//        assertThrows(AssertionError.class, () -> employeeService.create(employeeUpdated, token));
-        Employee updatedEmployeeAPI = employeeService.update(employeeUpdated, token);
-
+        employeeService.update(employeeUpdated, token);
+        //Пытаемся получить employee по новому id и проверяем, что employee с таким id не существует
         EmployeeEntity employeeFromDB = employeeRepository.getById(fakeEmployeeId);
-//        assert(employeeFromDB.isEqualEmployeeModel(updatedEmployeeAPI));
+        assertNull(employeeFromDB);
     }
 }

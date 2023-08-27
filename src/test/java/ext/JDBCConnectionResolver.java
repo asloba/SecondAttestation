@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class JDBCConnectionResolver implements ParameterResolver, AfterAllCallback {
-    Connection connection;
     public static String KEY = "connection";
+    Connection connection;
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
